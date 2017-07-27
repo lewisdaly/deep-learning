@@ -64,6 +64,15 @@ class AmazonPreprocessor:
         # The validation data cannot be preprocessed in batches as we also need them to compute the f2 score
         self.X_val, self.y_val = self._preprocess_val_files()
 
+    def get_train_batch(self, batch_size):
+        """
+        TODO: make a method for getting the next batch_features and batch_labels. Implement a 'cursor' that moves through 
+        """
+        
+        
+        
+        
+     
     def get_train_generator(self, batch_size):
         """
         Returns a batch generator which transforms chunk of raw images into numpy matrices
