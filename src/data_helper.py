@@ -48,6 +48,9 @@ class AmazonPreprocessor:
         self.y_map = None
         self.X_test = None
         self.X_test_filename = None
+        
+        self.train_cursor = 0
+        self.test_cursor = 0
 
     def init(self):
         """
@@ -66,10 +69,34 @@ class AmazonPreprocessor:
 
     def get_train_batch(self, batch_size):
         """
-        TODO: make a method for getting the next batch_features and batch_labels. Implement a 'cursor' that moves through 
+        Get the next batch_features and batch_labels. Implement a 'cursor' that moves through 
+        @return Tuple<features, labels>
         """
+        start_offset = self.test_cursor
+        end_offset = start_offset + batch_size - 1
+        self.test_cursor += batch_size
         
+        print('Getting training batch: {}, {}'.format(start_offset, end_offset))
         
+        batch_features = np.zeros((batch_size, *self.img_resize, 3))
+        batch_labels = np.zeros((batch_size, len(self.y_train[0])))
+        
+        print('batch_features', batch_features)
+        print('batch_labels', batch_labels)
+        
+        for idx in range(start_offset, end_offset):
+            # Maybe shuffle the index?
+            img = Image.open(self.X_train[start_offset + idx])
+            img.thumbnail(self.img_resize)
+
+            # Augment the image `img` here
+
+            # Convert to RGB and normalize
+            img_array = np.asarray(img.convert("RGB"), dtype=np.float32) / 255
+            batch_features[idx] = img_array
+            batch_labels[idx] = self.y_train[start_offset + idx]
+        
+        return (batch_features, batch_labels)
         
         
      
